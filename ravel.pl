@@ -13,6 +13,7 @@ my $usage = "cat \$twine_html_file | perl $0 \$output_directory\n";
 
 my $dir = shift or die $usage;
 $dir =~ s/\/+$//;
+mkdir($dir);
 
 ## parse html.
 my $html = join("", <>);
@@ -51,7 +52,6 @@ $st = $st->pop();
 my $st_attrs = {map {$_->nodeName => $_->getValue} $st->attributes()};
 
 warn "Serializing $st_attrs->{name}...\n";
-mkdir($dir);
 
 my $errors = 0;
 my @passages = $st->getElementsByTagName("tw-passagedata");
@@ -59,10 +59,11 @@ my $full_story_dir = File::Spec->rel2abs($dir);
 
 foreach my $el (@passages) {
 	my $name = $el->getAttribute("name");
+	warn "processing $name\n";
 	my $psg_attrs = {map {$_->nodeName => $_->getValue} $el->attributes()};
 	push @{$st_attrs->{">passages"}}, $psg_attrs;
 
-	my $pathString = File::Spec->rel2abs("$full_story_dir/$name.twp");
+	my $pathString = File::Spec->rel2abs("$full_story_dir/$name.tw");
 	my $dirname = dirname($pathString);
 	if (substr($dirname, 0, length($full_story_dir)) ne $full_story_dir) {
 		die "Error: Passage name $name resolves to a path outside the story workspace.";

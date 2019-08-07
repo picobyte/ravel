@@ -4,10 +4,8 @@ use strict;
 use JSON;
 use File::Spec;
 use File::Basename;
-use XML::LibXML;
 use POSIX qw/ceil/;
 use Math::Complex qw/sqrt/;
-use HTML::Entities;
 
 my $usage = "perl $0 \$output_directory [options] > \$output_twine_html_file\n";
 my $dir = shift or die $usage;
@@ -49,7 +47,7 @@ foreach my $pref (@$passages) {
 	$pid++;
 	my $posX = ($pid - 1) % $sizeX;
 	my $posY = ($pid - 1 - $posX) / $sizeX;
-	my $pathString = File::Spec->rel2abs("$full_story_dir/$pref->{name}.twp");
+	my $pathString = File::Spec->rel2abs("$full_story_dir/$pref->{name}.tw");
 	my $dirname = dirname($pathString);
 	if (substr($dirname, 0, length($full_story_dir)) ne $full_story_dir) {
 		die "Error: Passage name $pref->{name} resolves to a path outside the story workspace.";
